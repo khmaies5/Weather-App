@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">PSA Weather Test</string>
+    <string name="search">Search</string>
+    <string name="today">Today</string>
+    <string name="search_city_weather">Search City Weather</string>
+    <string name="search_for_a_city">Search for a city</string>
+    <string name="title_activity_main">MainActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="weather_fragment_label">Weather</string>
+    <string name="add_city_fragment_label">Add City</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
 </resources>
