@@ -12,7 +12,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
-        buildConfigField 'String', 'WeatherAPIKey', WeatherAPIKey
+        buildConfigField "String", "weather_api_key", '"c02fc746243b9529403f15e718291e17"'
+        buildConfigField "String", "end_point", '"http://api.openweathermap.org/data/2.5/"'
     }
 
     buildTypes {
