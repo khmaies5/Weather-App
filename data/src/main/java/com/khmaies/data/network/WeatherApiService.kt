@@ -1,5 +1,7 @@
-package com.khmaies.data
+package com.khmaies.data.network
 
+import com.khmaies.data.BuildConfig
+import com.khmaies.data.model.Coordination
 import com.khmaies.data.model.WeatherDataResponse
 import okhttp3.OkHttpClient
 import retrofit2.Response
@@ -21,13 +23,13 @@ interface WeatherApiService {
     suspend fun findCityCoord(
         @Query("q") q: String,
         @Query("appid") appid: String = BuildConfig.weather_api_key
-    ): Response<WeatherDataResponse.Coord>
+    ): Response<Coordination>
 
     @GET("onecall")
     suspend fun findCityWeatherData(
-        @Query("lat") lat: Double,
-        @Query("lon") lon: Double,
-        @Query("exclude") exclude: String = "hourly,dail",
+        @Query("lat") lat: Double?,
+        @Query("lon") lon: Double?,
+        @Query("exclude") exclude: String = "hourly,daily",
         @Query("units") units: String = "metric",
         @Query("appid") appid: String = BuildConfig.weather_api_key
     ): Response<WeatherDataResponse>

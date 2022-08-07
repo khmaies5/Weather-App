@@ -1,4 +1,4 @@
-package com.khmaies.data
+package com.khmaies.data.network
 
 import android.annotation.SuppressLint
 import android.content.Context

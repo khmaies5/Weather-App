@@ -12,11 +12,12 @@ data class WeatherDetail(
 
     @PrimaryKey
     var id: Int? = 0,
-    var temp: Double? = null,
+    var temp: Int? = null,
     var icon: String? = null,
     var cityName: String? = null,
     var countryName: String? = null,
-    var dateTime: String? = null
+    var dateTime: String? = null,
+    /*var isDefault: Int = 0*/
 ) {
     companion object {
         const val TABLE_NAME = "weather_detail"

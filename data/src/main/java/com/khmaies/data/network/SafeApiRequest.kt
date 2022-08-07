@@ -1,4 +1,4 @@
-package com.khmaies.data
+package com.khmaies.data.network
 
 import org.json.JSONException
 import org.json.JSONObject

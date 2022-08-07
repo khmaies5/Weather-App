@@ -1,18 +1,37 @@
 package com.khmaies.data.repository
 
-import com.khmaies.data.SafeApiRequest
-import com.khmaies.data.WeatherApiService
+import com.khmaies.data.local.WeatherDatabase
+import com.khmaies.data.local.dao.WeatherDetailDao
+import com.khmaies.data.network.SafeApiRequest
+import com.khmaies.data.network.WeatherApiService
+import com.khmaies.data.model.Coordination
 import com.khmaies.data.model.WeatherDataResponse
+import com.khmaies.data.model.WeatherDetail
 
 class WeatherRepository(
-    private val api: WeatherApiService
+    private val api: WeatherApiService,
+    private val db: WeatherDetailDao
 ) : SafeApiRequest() {
 
-    suspend fun findCityCoord(cityName: String): WeatherDataResponse.Coord = apiRequest {
+    suspend fun findCityCoord(cityName: String): Coordination = apiRequest {
         api.findCityCoord(cityName)
     }
 
-    suspend fun findCityWeather(lat: Double, lon: Double): WeatherDataResponse = apiRequest {
-        api.findCityWeatherData(lat, lon)
+   suspend fun findCityWeather(weatherDataResponse: Coordination): WeatherDataResponse =
+        apiRequest {
+            api.findCityWeatherData(weatherDataResponse.coord.lat, weatherDataResponse.coord.lon)
+        }
+
+    suspend fun addWeather(weatherDetail: WeatherDetail) {
+        db.addWeather(weatherDetail)
     }
+
+    suspend fun fetchWeatherDetail(cityName: String): WeatherDetail? =
+        db.fetchWeatherByCity(cityName)
+
+    suspend fun fetchAllWeatherDetails(): List<WeatherDetail> =
+        db.fetchAllWeatherDetails()
+
+    suspend fun fetchLatestWeatherDetail() : WeatherDetail? =
+        db.fetchDefaultWeather()
 }
