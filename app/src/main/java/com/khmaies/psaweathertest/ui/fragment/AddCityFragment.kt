@@ -37,7 +37,7 @@ class AddCityFragment : Fragment() {
     lateinit var sharedViewModel: WeatherViewModel
 
     private lateinit var searchResultAdapter: SearchResultAdapter
-    var newWeatherDetails : MutableList<WeatherDetail> = mutableListOf()
+    var newWeatherDetails: MutableList<WeatherDetail> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,12 +57,21 @@ class AddCityFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedViewModel.fetchAllWeatherDetailsFromDb()
+
+
         setUI()
 
     }
 
+    /**
+     * prepare the UI to be showen
+     */
     private fun setUI() {
+
+        // initialize the recylcerView
         initRecyclerView()
+
+        // listen to clicks on list
         binding.inputFindCityWeather.setOnEditorActionListener { textView, i, _ ->
             if (i == EditorInfo.IME_ACTION_DONE) {
                 sharedViewModel.fetchWeatherDetailFromDb((textView as EditText).text.toString())
@@ -72,11 +81,16 @@ class AddCityFragment : Fragment() {
         }
     }
 
+    /**
+     * prepare recyclerView's layout and actions
+     */
     private fun initRecyclerView() {
-        searchResultAdapter = SearchResultAdapter(SearchResultAdapter.OnClickListener{weatherDetail ->
-            sharedViewModel.selectWeatherData(weatherDetail)
-        })
+        searchResultAdapter =
+            SearchResultAdapter(SearchResultAdapter.OnClickListener { weatherDetail ->
+                sharedViewModel.selectWeatherData(weatherDetail)
+            })
 
+        // setting the layout of adapter
         val mLayoutManager = LinearLayoutManager(
             this.context,
             LinearLayoutManager.VERTICAL,
@@ -108,7 +122,7 @@ class AddCityFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 // this method is called when we swipe our item to right direction.
-// on below line we are getting the item at a particular position.
+                // on below line we are getting the item at a particular position.
                 val deletedWeather: WeatherDetail =
                     newWeatherDetails[viewHolder.adapterPosition]
 
@@ -126,7 +140,11 @@ class AddCityFragment : Fragment() {
                 searchResultAdapter.notifyItemRemoved(viewHolder.adapterPosition)
 
                 // below line is to display our snackbar with action.
-                Snackbar.make(binding.recyclerViewSearchedCityTemperature, "Deleted ${deletedWeather.cityName}", Snackbar.LENGTH_LONG)
+                Snackbar.make(
+                    binding.recyclerViewSearchedCityTemperature,
+                    "Deleted ${deletedWeather.cityName}",
+                    Snackbar.LENGTH_LONG
+                )
                     .show()
             }
             // at last we are adding this
@@ -136,6 +154,10 @@ class AddCityFragment : Fragment() {
 
     }
 
+
+    /**
+     * observe livedata to update recyclerview on change
+     */
     private fun observeCall() {
 
 

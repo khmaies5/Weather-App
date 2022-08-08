@@ -31,6 +31,13 @@ class WeatherViewModel(private val weatherRepo: WeatherRepository) : ViewModel()
     private lateinit var coordResponse: Coordination
 
 
+    /**
+     * sending two request to api
+     * 1- to find city longitude&latitude
+     * 2- use the result of first request to fetch weather data from api
+     *
+     * @param cityName
+     */
     private fun findCityWeather(cityName: String) {
        // _weatherLiveData.postValue(Event(State.loading()))
         viewModelScope.launch {
@@ -83,6 +90,11 @@ class WeatherViewModel(private val weatherRepo: WeatherRepository) : ViewModel()
         }
     }
 
+    /**
+     * add weather details to local DB
+     *
+     * @param WeatherDataResponse
+     */
     private suspend fun addWeatherDetailtoDb(
         weatherResponse: WeatherDataResponse
     ) {
@@ -98,6 +110,11 @@ class WeatherViewModel(private val weatherRepo: WeatherRepository) : ViewModel()
         fetchAllWeatherDetailsFromDb()
     }
 
+    /**
+     * fetch single weather record from DB by name
+     *
+     * @param cityName
+     */
     fun fetchWeatherDetailFromDb(cityName: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val weatherDetail = weatherRepo.fetchWeatherDetail(cityName.toLowerCase())
@@ -120,10 +137,18 @@ class WeatherViewModel(private val weatherRepo: WeatherRepository) : ViewModel()
         }
     }
 
+    /**
+     * set the default weather data
+     *
+     * @param WeatherDetail
+     */
     fun selectWeatherData(weatherDetail: WeatherDetail) {
         _weatherLiveData.postValue(weatherDetail)
     }
 
+    /**
+     * fetch the latest record from DB
+     */
     fun fetchLatestWeather() {
         viewModelScope.launch(Dispatchers.IO) {
             val weatherDetail = weatherRepo.fetchLatestWeatherDetail()
@@ -134,6 +159,11 @@ class WeatherViewModel(private val weatherRepo: WeatherRepository) : ViewModel()
         }
     }
 
+    /**
+     * delete record from DB by ID
+     *
+     * @param CityId
+     */
     fun deleteCity(cityId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             weatherRepo.deleteCity(cityId)
@@ -141,6 +171,9 @@ class WeatherViewModel(private val weatherRepo: WeatherRepository) : ViewModel()
         fetchAllWeatherDetailsFromDb()
     }
 
+    /**
+     * fetch all weather data from DB
+     */
     fun fetchAllWeatherDetailsFromDb() {
         viewModelScope.launch(Dispatchers.IO) {
             val weatherDetailList = weatherRepo.fetchAllWeatherDetails()

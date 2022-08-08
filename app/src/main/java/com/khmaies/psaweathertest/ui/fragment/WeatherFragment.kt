@@ -58,15 +58,16 @@ class WeatherFragment : Fragment() {
         sharedViewModel.fetchLatestWeather()
 
 
-       // initUi()
-
         binding.floatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_WeatherFragment_to_AddCityFragment)
 
         }
     }
 
-    fun observeApiCall(){
+    /**
+     * observe livedata to set data accordingly
+     */
+    private fun observeApiCall(){
         sharedViewModel.weatherLiveData.observe(
             viewLifecycleOwner
         ) {
@@ -74,12 +75,13 @@ class WeatherFragment : Fragment() {
         }
     }
 
+    /**
+     * initialize th ui to show data
+     */
     @SuppressLint("SetTextI18n")
     private fun initUi() {
         if(sharedViewModel.weatherLiveData.value == null) {
             binding.textCityName.text = getString(R.string.empty_view)
-            //observeApiCall()
-
         } else {
             binding.textLabelDegree.visibility = View.VISIBLE
             binding.textTodaysDate.visibility = View.VISIBLE
@@ -105,6 +107,11 @@ class WeatherFragment : Fragment() {
         _binding = null
     }
 
+    /**
+     * map weather icons to desired background
+     *
+     * @param iconCode
+     */
     private fun changeBgAccToTemp(iconCode: String?) {
         when (iconCode) {
             "04d", "04n", "03d", "03n" -> binding.imageCity.setImageResource(R.drawable.cloudybg)
