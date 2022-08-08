@@ -52,6 +52,7 @@ class WeatherViewModel(private val weatherRepo: WeatherRepository) : ViewModel()
                     weatherDetail.cityName = weatherResponse.name
                     weatherDetail.countryName = weatherResponse.country
                     weatherDetail.temp = weatherResponse.current?.temp?.toInt()
+                    weatherDetail.desc = weatherResponse.current?.weather?.first()?.description
                     _weatherLiveData.postValue(
                                 weatherDetail
                     )
@@ -72,6 +73,7 @@ class WeatherViewModel(private val weatherRepo: WeatherRepository) : ViewModel()
         weatherDetail.countryName = weatherResponse.country
         weatherDetail.temp = weatherResponse.current?.temp?.toInt()
         weatherDetail.dateTime = AppUtils.getCurrentDateTime("E, d MMM yyyy HH:mm:ss")
+        weatherDetail.desc = weatherResponse.current?.weather?.first()?.description
         weatherRepo.addWeather(weatherDetail)
         fetchAllWeatherDetailsFromDb()
     }
@@ -110,6 +112,13 @@ class WeatherViewModel(private val weatherRepo: WeatherRepository) : ViewModel()
             }
 
         }
+    }
+
+    fun deleteCity(cityId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            weatherRepo.deleteCity(cityId)
+        }
+        fetchAllWeatherDetailsFromDb()
     }
 
     fun fetchAllWeatherDetailsFromDb() {

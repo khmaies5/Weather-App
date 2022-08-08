@@ -11,7 +11,11 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import com.khmaies.data.model.WeatherDetail
 import com.khmaies.psaweathertest.databinding.FragmentAddCityBinding
 import com.khmaies.psaweathertest.ui.adapter.SearchResultAdapter
 import com.khmaies.psaweathertest.ui.common.WeatherApp
@@ -33,6 +37,7 @@ class AddCityFragment : Fragment() {
     lateinit var sharedViewModel: WeatherViewModel
 
     private lateinit var searchResultAdapter: SearchResultAdapter
+    var newWeatherDetails : MutableList<WeatherDetail> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,11 +82,58 @@ class AddCityFragment : Fragment() {
             LinearLayoutManager.VERTICAL,
             false
         )
+
         binding.recyclerViewSearchedCityTemperature.apply {
             layoutManager = mLayoutManager
             itemAnimator = DefaultItemAnimator()
             adapter = searchResultAdapter
         }
+
+        // on below line we are creating a method to create item touch helper
+        // method for adding swipe to delete functionality.
+        // in this we are specifying drag direction and position to right
+        // on below line we are creating a method to create item touch helper
+        // method for adding swipe to delete functionality.
+        // in this we are specifying drag direction and position to right
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                // this method is called
+                // when the item is moved.
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                // this method is called when we swipe our item to right direction.
+// on below line we are getting the item at a particular position.
+                val deletedWeather: WeatherDetail =
+                    newWeatherDetails[viewHolder.adapterPosition]
+
+                // below line is to get the position
+                // of the item at that position.
+                val position = viewHolder.adapterPosition
+
+                // this method is called when item is swiped.
+                // below line is to remove item from our array list.
+                newWeatherDetails.removeAt(viewHolder.adapterPosition)
+
+                deletedWeather.id?.let { sharedViewModel.deleteCity(it) }
+
+                // below line is to notify our item is removed from adapter.
+                searchResultAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+
+                // below line is to display our snackbar with action.
+                Snackbar.make(binding.recyclerViewSearchedCityTemperature, "Deleted ${deletedWeather.cityName}", Snackbar.LENGTH_LONG)
+                    .show()
+            }
+            // at last we are adding this
+            // to our recycler view.
+        }).attachToRecyclerView(binding.recyclerViewSearchedCityTemperature)
+
+
     }
 
     private fun observeCall() {
@@ -96,7 +148,10 @@ class AddCityFragment : Fragment() {
                     }
                     is State.Success -> {
                         binding.inputFindCityWeather.text?.clear()
+                        Log.e("monster fect","${state.data}")
+
                         searchResultAdapter.setData(state.data)
+                        newWeatherDetails = state.data
                     }
                     is State.Error -> {
                         Toast.makeText(context, state.message, Toast.LENGTH_LONG).show()

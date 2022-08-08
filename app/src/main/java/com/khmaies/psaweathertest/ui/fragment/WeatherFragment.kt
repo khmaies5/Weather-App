@@ -54,10 +54,11 @@ class WeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observeApiCall()
         sharedViewModel.fetchLatestWeather()
 
 
-        initUi()
+       // initUi()
 
         binding.floatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_WeatherFragment_to_AddCityFragment)
@@ -77,7 +78,7 @@ class WeatherFragment : Fragment() {
     private fun initUi() {
         if(sharedViewModel.weatherLiveData.value == null) {
             binding.textCityName.text = getString(R.string.empty_view)
-            observeApiCall()
+            //observeApiCall()
 
         } else {
             binding.textLabelDegree.visibility = View.VISIBLE
@@ -89,10 +90,12 @@ class WeatherFragment : Fragment() {
                 )
             }?.let { binding.imageWeatherSymbol.setImageResource(it) }
 
+            changeBgAccToTemp(sharedViewModel.weatherLiveData.value?.icon)
             binding.textTemperature.text = sharedViewModel.weatherLiveData.value?.temp.toString()
             binding.textTodaysDate.text = AppUtils.getCurrentDateTime("E, d MMM yyyy")
             binding.textCityName.text =
                 "${sharedViewModel.weatherLiveData.value?.cityName?.capitalize()}, ${sharedViewModel.weatherLiveData.value?.countryName}"
+            binding.textWeatherDesc.text = sharedViewModel.weatherLiveData.value?.desc
         }
     }
 
@@ -100,5 +103,17 @@ class WeatherFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun changeBgAccToTemp(iconCode: String?) {
+        when (iconCode) {
+            "04d", "04n", "03d", "03n" -> binding.imageCity.setImageResource(R.drawable.cloudybg)
+            "02d", "02n" -> binding.imageCity.setImageResource(R.drawable.partlycloudybg)
+            "09d", "09n","10d","10n","50n","50d" -> binding.imageCity.setImageResource(R.drawable.rainybg)
+            "13d", "13n" -> binding.imageCity.setImageResource(R.drawable.snowybg)
+            "11d", "11n" -> binding.imageCity.setImageResource(R.drawable.stormybg)
+            "01d", "01n" -> binding.imageCity.setImageResource(R.drawable.sunnybg)
+            else -> binding.imageCity.setImageResource(R.drawable.stormybg)
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.khmaies.data.repository
 
-import com.khmaies.data.local.WeatherDatabase
 import com.khmaies.data.local.dao.WeatherDetailDao
 import com.khmaies.data.network.SafeApiRequest
 import com.khmaies.data.network.WeatherApiService
@@ -21,6 +20,10 @@ class WeatherRepository(
         apiRequest {
             api.findCityWeatherData(weatherDataResponse.coord.lat, weatherDataResponse.coord.lon)
         }
+
+    suspend fun deleteCity(cityId: Int) {
+        db.deleteCity(cityId)
+    }
 
     suspend fun addWeather(weatherDetail: WeatherDetail) {
         db.addWeather(weatherDetail)

@@ -17,6 +17,7 @@ data class WeatherDetail(
     var cityName: String? = null,
     var countryName: String? = null,
     var dateTime: String? = null,
+    var desc: String? = null
     /*var isDefault: Int = 0*/
 ) {
     companion object {

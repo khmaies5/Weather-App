@@ -17,6 +17,9 @@ interface WeatherDetailDao {
     @Query("SELECT * FROM ${WeatherDetail.TABLE_NAME} WHERE cityName = :cityName")
     suspend fun fetchWeatherByCity(cityName: String): WeatherDetail?
 
+    @Query("DELETE FROM ${WeatherDetail.TABLE_NAME} WHERE id = :cityId")
+    suspend fun deleteCity(cityId: Int)
+
 
     @Query("SELECT * FROM ${WeatherDetail.TABLE_NAME}  ORDER BY dateTime DESC LIMIT 1")
     suspend fun fetchDefaultWeather(): WeatherDetail?
