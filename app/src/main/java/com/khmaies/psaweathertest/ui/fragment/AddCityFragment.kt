@@ -148,7 +148,6 @@ class AddCityFragment : Fragment() {
                     }
                     is State.Success -> {
                         binding.inputFindCityWeather.text?.clear()
-                        Log.e("monster fect","${state.data}")
 
                         searchResultAdapter.setData(state.data)
                         newWeatherDetails = state.data

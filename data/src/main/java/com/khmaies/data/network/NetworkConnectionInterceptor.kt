@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.khmaies.data.utils.NoInternetException
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
@@ -17,7 +18,7 @@ class NetworkConnectionInterceptor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!isInternetAvailable())
-            throw IOException("Make sure you have an active data connection")
+            throw NoInternetException("Make sure you have an active data connection")
         return chain.proceed(chain.request())
     }
 

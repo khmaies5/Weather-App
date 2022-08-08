@@ -36,9 +36,10 @@ class WeatherViewModel(private val weatherRepo: WeatherRepository) : ViewModel()
         viewModelScope.launch {
 
 
-                 coordResponse = weatherRepo.findCityCoord(cityName)
+            try {
+                coordResponse = weatherRepo.findCityCoord(cityName)
 
-                 weatherResponse = weatherRepo.findCityWeather(coordResponse)
+                weatherResponse = weatherRepo.findCityWeather(coordResponse)
                 weatherResponse.id = coordResponse.id
                 weatherResponse.country = coordResponse.sys.country
                 weatherResponse.name = coordResponse.name
@@ -54,9 +55,28 @@ class WeatherViewModel(private val weatherRepo: WeatherRepository) : ViewModel()
                     weatherDetail.temp = weatherResponse.current?.temp?.toInt()
                     weatherDetail.desc = weatherResponse.current?.weather?.first()?.description
                     _weatherLiveData.postValue(
-                                weatherDetail
+                        weatherDetail
                     )
                 }
+            }catch (e: ApiException) {
+                withContext(Dispatchers.Main) {
+                    _weatherDetailListLiveData.postValue(Event(State.error(e.message ?: "")))
+                }
+            } catch (e: NoInternetException) {
+                withContext(Dispatchers.Main) {
+                    _weatherDetailListLiveData.postValue(Event(State.error(e.message ?: "")))
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    _weatherDetailListLiveData.postValue(
+                        Event(
+                            State.error(
+                                e.message ?: ""
+                            )
+                        )
+                    )
+                }
+            }
 
 
 

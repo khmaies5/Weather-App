@@ -1,9 +1,9 @@
 package com.khmaies.data.network
 
+import com.khmaies.data.utils.ApiException
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Response
-import java.io.IOException
 
 abstract class SafeApiRequest {
 
@@ -13,7 +13,6 @@ abstract class SafeApiRequest {
             return response.body()!!
         } else {
             val error = response.errorBody()?.string()
-
             val message = StringBuilder()
             error?.let {
                 try {
@@ -21,7 +20,7 @@ abstract class SafeApiRequest {
                 } catch (e: JSONException) {
                 }
             }
-            throw IOException(message.toString())
+            throw ApiException(message.toString())
         }
     }
 }
