@@ -6,7 +6,7 @@ PSA Weather is a minimalist weather app.
 ## Installation
 Clone this repository and import into **Android Studio**
 ```bash
-git clone git@github.com:wolox/<reponame>.git
+git clone git@github.com:khmaies5/<reponame>.git
 ```
 ## Configuration
 ### API key:
